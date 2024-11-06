@@ -2,15 +2,22 @@
 
 class NotesController extends Controller
 {
+    private $noteModel;
+
+    public function __construct()
+    {
+        $this->noteModel = new Note();
+    }
+
     public function index()
     {
-        $notes = Note::all();
+        $notes = $this->noteModel->findAll();
         $this->render('notes/index', ['notes' => $notes]);
     }
 
     public function show($id)
     {
-        $note = Note::find($id);
+        $note = $this->noteModel->findById($id);
         $this->render('notes/show', ['note' => $note]);
     }
 
@@ -21,30 +28,35 @@ class NotesController extends Controller
 
     public function store()
     {
-        $note = new Note($_POST['title'], $_POST['content']);
-        $note->save();
+        $data = [
+            'title' => $_POST['title'],
+            'content' => $_POST['content']
+        ];
+
+        $this->noteModel->create($data);
         $this->redirect('/notes');
     }
 
     public function edit($id)
     {
-        $note = Note::find($id);
+        $note = $this->noteModel->findById($id);
         $this->render('notes/edit', ['note' => $note]);
     }
 
     public function update($id)
     {
-        $note = Note::find($id);
-        $note->title = $_POST['title'];
-        $note->content = $_POST['content'];
-        $note->save();
+        $data = [
+            'title' => $_POST['title'],
+            'content' => $_POST['content']
+        ];
+
+        $this->noteModel->update($id, $data);
         $this->redirect('/notes');
     }
 
     public function destroy($id)
     {
-        $note = Note::find($id);
-        $note->delete();
+        $this->noteModel->delete($id);
         $this->redirect('/notes');
     }
 }

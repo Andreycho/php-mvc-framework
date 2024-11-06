@@ -1,17 +1,16 @@
 <?php
 
-// session_start();
+define('BASE_PATH', __DIR__ . '/');
 
-// require __DIR__ . '/../core/init.php';
+$config = require BASE_PATH . 'app/config.php';
 
-// $app = new App();
-// $app->run();
+$db = new Database($config['db']);
 
-require 'Database.php';
+require BASE_PATH . 'app/routes.php';
 
-$config = require 'config.php';
+Router::route();
 
-$db = new Database($config['db'], 'root', 'password123');
+
 
 
 

@@ -7,60 +7,57 @@ class Note extends Model
     public $title;
     public $content;
 
-    public function __construct($title, $content)
+    public function __construct($title = null, $content = null)
     {
+        parent::__construct('notes');
+
         $this->title = $title;
         $this->content = $content;
     }
 
-    public static function all()
+    public function getTitle()
     {
-        global $db;
-
-        $db->query('SELECT * FROM notes');
-        return $db->get();
+        return $this->title;
     }
 
-    public static function find($id)
+    public function setTitle(string $title)
     {
-        global $db;
-
-        $db->query('SELECT * FROM notes WHERE id = :id', ['id' => $id]);
-        return $db->findOrFail();
+        $this->title = $title;
     }
 
-    public function save()
+    public function getContent()
     {
-        global $db;
-
-        if ($this->id) {
-            $db->query('UPDATE notes SET title = :title, content = :content WHERE id = :id', [
-                'id' => $this->id,
-                'title' => $this->title,
-                'content' => $this->content
-            ]);
-        } else {
-            $db->query('INSERT INTO notes (title, content) VALUES (:title, :content)', [
-                'title' => $this->title,
-                'content' => $this->content
-            ]);
-        }
+        return $this->content;
     }
 
-    public function delete()
+    public function setContent(string $content)
     {
-        global $db;
-
-        $db->query('DELETE FROM notes WHERE id = :id', ['id' => $this->id]);
+        $this->content = $content;
     }
 
-    public function __get($name)
+    public function toArray ()
     {
-        return $this->$name;
+        return [
+            'title' => $this->title,
+            'content' => $this->content
+        ];
     }
 
-    public function __set($name, $value)
+    public function create($data)
     {
-        $this->$name = $value;
+        $data = [
+            'title' => $this->title,
+            'content' => $this->content
+        ];
+        parent::create($data);
+    }
+    
+    public function update($id, $data)
+    {
+        $data = [
+            'title' => $this->title,
+            'content' => $this->content
+        ];
+        parent::update($id, $data);
     }
 }

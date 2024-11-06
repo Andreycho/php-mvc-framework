@@ -4,8 +4,8 @@ use PDO;
 
 Class Database
 {
-    public $connection;
-    public $statement;
+    private $connection;
+    private $statement;
 
     public function __construct($config, $username = 'root', $password = 'password123')
     {
@@ -18,36 +18,55 @@ Class Database
             ]);
     }
 
-    public function query($query, $params = [])
+    private function query($query, $params = [])
     {
         $this->statement = $this->connection->prepare($query);
 
         return $this->statement->execute($params);
     }
 
-    public function get()
+    public function findById($table, $id)
     {
-        return $this->statement->fetchAll();
-    }
+        $this->query("SELECT * FROM $table WHERE id = :id", ['id' => $id]);
 
-    public function find()
-    {
         return $this->statement->fetch();
     }
 
-    public function findOrFail()
+    public function findAll($table)
     {
-        $result = $this->find();
-        if(!$result) {
-            abort();
+        $this->query("SELECT * FROM $table");
+
+        return $this->statement->fetchAll();
+    }
+
+    public function count($table)
+    {
+        $this->query("SELECT COUNT(*) FROM $table");
+
+        return $this->statement->fetchColumn();
+    }
+
+    public function create($table, $data)
+    {
+        $keys = implode(', ', array_keys($data));
+        $values = implode(', :', array_keys($data));
+
+        $this->query("INSERT INTO $table ($keys) VALUES (:$values)", $data);
+    }
+
+    public function update($table, $id, $data)
+    {
+        $set = '';
+        foreach ($data as $key => $value) {
+            $set .= "$key = :$key, ";
         }
+        $set = rtrim($set, ', ');
 
-        return $result;
+        $this->query("UPDATE $table SET $set WHERE id = :id", array_merge($data, ['id' => $id]));
     }
 
-    public function count()
+    public function delete($table, $id)
     {
-        return $this->statement->rowCount();
+        $this->query("DELETE FROM $table WHERE id = :id", ['id' => $id]);
     }
-
 }
