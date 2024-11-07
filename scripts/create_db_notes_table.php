@@ -9,7 +9,7 @@ $username = $config['username'];
 $password = $config['password'];
 $charset = $config['charset'];
 
-$dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=$charset";
+$dsn = "mysql:host=$host;port=$port;charset=$charset";
 
 try {
     $pdo = new PDO($dsn, $username, $password, [
