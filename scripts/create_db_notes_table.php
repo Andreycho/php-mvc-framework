@@ -1,6 +1,6 @@
 <?php
 
-$config = include('config.php');
+$config = require BASE_PATH . 'app/config.php';
 
 $host = $config['host'];
 $port = $config['port'];
