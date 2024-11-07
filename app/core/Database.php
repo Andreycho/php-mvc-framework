@@ -5,12 +5,19 @@ Class Database
     private $connection;
     private $statement;
 
-    public function __construct($config, $username = 'root', $password = 'password123')
+    public function __construct($config)
     {
-        $dsn = 'mysql:host=' . $config['host'] . ';port=' . $config['port'] . ';dbname=' . $config['dbname'] . ';charset=' . $config['charset'];
+        $host = $config['host'];
+        $port = $config['port'];
+        $dbname = $config['dbname'];
+        $username = $config['username'];
+        $password = $config['password'];
+        $charset = $config['charset'];
+
+        $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=$charset";
 
         try {
-            $this->connection = new PDO($dsn, 'root', 'password123', [
+            $this->connection = new PDO($dsn, $username, $password, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
             ]);
