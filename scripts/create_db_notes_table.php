@@ -1,6 +1,6 @@
 <?php
 
-$config = require BASE_PATH . 'app/config.php';
+$config = require __DIR__ . '/../app/config.php';
 
 $host = $config['host'];
 $port = $config['port'];
