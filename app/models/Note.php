@@ -1,6 +1,6 @@
 <?php
 
-use Core\Model;
+require_once BASE_PATH . 'app/core/Model.php';
 
 class Note extends Model
 {
@@ -46,8 +46,8 @@ class Note extends Model
     public function create($data)
     {
         $data = [
-            'title' => $this->title,
-            'content' => $this->content
+            'title' => $data['title'],
+            'content' => $data['content']
         ];
         parent::create($data);
     }
@@ -55,9 +55,29 @@ class Note extends Model
     public function update($id, $data)
     {
         $data = [
-            'title' => $this->title,
-            'content' => $this->content
+            'title' => $data['title'],
+            'content' => $data['content']
         ];
         parent::update($id, $data);
+    }
+
+    public function delete($id)
+    {
+        parent::delete($id);
+    }
+
+    public function findById($id)
+    {
+        return parent::findById($id);
+    }
+
+    public function findAll()
+    {
+        return parent::findAll();
+    }
+
+    public function count()
+    {
+        return parent::count();
     }
 }

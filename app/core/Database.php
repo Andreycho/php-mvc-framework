@@ -1,7 +1,5 @@
 <?php
 
-use PDO;
-
 Class Database
 {
     private $connection;
@@ -9,20 +7,26 @@ Class Database
 
     public function __construct($config, $username = 'root', $password = 'password123')
     {
-        $dsn = 'mysql:' . http_build_query([$config['db'], '', ';' ]);
+        $dsn = 'mysql:host=' . $config['host'] . ';port=' . $config['port'] . ';dbname=' . $config['dbname'] . ';charset=' . $config['charset'];
 
-        $this->connection = new PDO($dsn, $username, $password,
-            [
+        try {
+            $this->connection = new PDO($dsn, 'root', 'password123', [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
             ]);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
     }
 
     private function query($query, $params = [])
     {
-        $this->statement = $this->connection->prepare($query);
-
-        return $this->statement->execute($params);
+        try {
+            $this->statement = $this->connection->prepare($query);
+            $this->statement->execute($params);
+        } catch (PDOException $e) {
+            die("Query failed: " . $e->getMessage());
+        }
     }
 
     public function findById($table, $id)
@@ -49,9 +53,11 @@ Class Database
     public function create($table, $data)
     {
         $keys = implode(', ', array_keys($data));
-        $values = implode(', :', array_keys($data));
+        $placeholders = ':' . implode(', :', array_keys($data));
 
-        $this->query("INSERT INTO $table ($keys) VALUES (:$values)", $data);
+        $query = "INSERT INTO $table ($keys) VALUES ($placeholders)";
+
+        return $this->query($query, $data);
     }
 
     public function update($table, $id, $data)

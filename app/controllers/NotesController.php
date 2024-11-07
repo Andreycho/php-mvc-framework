@@ -1,5 +1,7 @@
 <?php
 
+require_once BASE_PATH . 'app/models/Note.php';
+
 class NotesController extends Controller
 {
     private $noteModel;
@@ -12,13 +14,21 @@ class NotesController extends Controller
     public function index()
     {
         $notes = $this->noteModel->findAll();
-        $this->render('notes/index', ['notes' => $notes]);
+        if ($notes) {
+            $this->render('notes/index', ['notes' => $notes]);
+        } else {
+            $this->render('notes/index', ['message' => 'There are currently no notes']);
+        }
     }
 
     public function show($id)
     {
         $note = $this->noteModel->findById($id);
-        $this->render('notes/show', ['note' => $note]);
+        if ($note) {
+            $this->render('notes/show', ['note' => $note]);
+        } else {
+            $this->render('404', ['message' => 'Note not found']);
+        }
     }
 
     public function create()
@@ -28,6 +38,11 @@ class NotesController extends Controller
 
     public function store()
     {
+        if (empty($_POST['title']) || empty($_POST['content'])) {
+            echo "Both title and content are required!";
+            die();
+        }
+
         $data = [
             'title' => $_POST['title'],
             'content' => $_POST['content']

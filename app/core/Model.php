@@ -1,9 +1,5 @@
 <?php
 
-namespace Core;
-
-use Database;
-
 class Model
 {
     protected $db;

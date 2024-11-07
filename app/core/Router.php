@@ -19,7 +19,11 @@ class Router
     {
         $requestUri = trim($_SERVER['REQUEST_URI'], '/');
         $requestMethod = $_SERVER['REQUEST_METHOD'];
-        
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method'])) {
+            $requestMethod = strtoupper($_POST['_method']);
+        }
+
         foreach (self::$routes as $route) {
             $routeUri = trim($route['uri'], '/');
             if ($requestMethod === $route['method'] && self::matchRoute($routeUri, $requestUri)) {
@@ -38,6 +42,7 @@ class Router
         }
         self::handle404();
     }
+
 
     private static function matchRoute($routeUri, $requestUri)
     {
@@ -76,11 +81,6 @@ class Router
     public static function delete($uri, $controller, $method)
     {
         self::add('DELETE', $uri, $controller, $method);
-    }
-
-    public static function patch($uri, $controller, $method)
-    {
-        self::add('PATCH', $uri, $controller, $method);
     }
 }
 
