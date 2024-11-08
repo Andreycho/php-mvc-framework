@@ -24,7 +24,7 @@ Here are some important files and directories to know:
 - **`app/views/`**: Contains the HTML templates for rendering views in the browser.
 - **`app/core/Router.php`**: Defines the routing logic for the application, including route definitions and parameter handling.
 - **`index.php`**: The front controller that initiates the request flow for each HTTP request.
-- **`scripts/create_db_and_table.php`**: A PHP script for automatically setting up the database and notes table.
+- **`scripts/create_db_notes_table.php`**: A PHP script for automatically setting up the database and notes table.
 - **`app/config.php`**: The configuration file where you can set database connection details and other configuration options.
 
 ## Prerequisites
